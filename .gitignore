@@ -1,1 +1,6 @@
 data/
+<<<<<<< HEAD
+=======
+classifier_cache.pickle
+__pycache__/
+>>>>>>> 73b9b9fec372e3c74bf15323cfa07c568c74adc0
