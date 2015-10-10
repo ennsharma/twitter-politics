@@ -63,7 +63,11 @@ def generate_tweet_lists():
 	pos_tweets_stanford_2, neg_tweets_stanford_2 = parse_stanford_data_2("./data/stanford_2/training.csv")
 	pos_tweets_umich, neg_tweets_umich = parse_umich_data("./data/umich/training.txt")
 	pos_tweets, neg_tweets = pos_tweets_stanford_1 + pos_tweets_stanford_2 + pos_tweets_umich, neg_tweets_stanford_1 + neg_tweets_stanford_2 + neg_tweets_umich
+<<<<<<< HEAD:tweet_gen.py
 	
+=======
+
+>>>>>>> cbb692685833e8efd75947e890672ccf295f26cb:election_visualize/twitter_politics/logic/tweet_gen.py
 	if len(pos_tweets) > len(neg_tweets):
 		pos_tweets = pos_tweets[:len(neg_tweets)]
 	elif len(pos_tweets) < len(neg_tweets):
