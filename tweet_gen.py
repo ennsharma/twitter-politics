@@ -23,16 +23,13 @@ def parse_stanford_data_1(pos_path, neg_path):
 def parse_stanford_data_2(filename):
 	print("Parsing Stanford_2 Database...")
 	pos_tweets, neg_tweets = [], []
-	f = open(filename, 'r', encoding='utf-8')
+	f = open(filename, 'r', encoding='ISO-8859-1')
 	reader = csv.reader(f)
-	try:
-		for line in reader:
-			if line[0] == 4:
-				pos_tweets.append((line[5], 'positive'))
-			elif line[0] == 0:
-				neg_tweets.append((line[5]), 'negative')
-	except Exception:
-		print('line read fail')
+	for line in reader:
+		if int(line[0]) == 4:
+			pos_tweets.append((line[5], 'positive'))
+		elif int(line[0]) == 0:
+			neg_tweets.append((line[5], 'negative'))
 	print("Done.")
 	print("....................")
 	print(len(pos_tweets), len(neg_tweets))
@@ -49,10 +46,8 @@ def parse_umich_data(filename):
 		else:
 			neg_tweets.append((text, 'negative'))
 	print("Done.")
-	print("....................")
+	print("---------------------------------------------")
 	return pos_tweets, neg_tweets
-
-print(parse_stanford_data_2("./data/stanford_2/training.csv"))
 
 def generate_tweet_lists():
 	pos_tweets_stanford_1, neg_tweets_stanford_1 = parse_stanford_data_1("./data/stanford_1/pos/", "./data/stanford/neg/")

@@ -1,6 +1,7 @@
 import nltk
 import tweet_gen
-
+import pickle
+import os
 def clean(s):
 	return s.translate(s.maketrans({ord(x) : '' for x in '.,/><!123456789'})).lower()
 def canonicalize(l):
@@ -36,8 +37,8 @@ def extract_overall_features(doc):
 		features['contains(%s)' % word] = (word in doc_words)
 	return features
 
-def classify_string(tup, classifier):
-	result = classifier.classify(extract_overall_features(string_to_array(tup[0])))
+def classify_string(s, classifier, debug=False):
+	result = classifier.classify(extract_overall_features(string_to_array(s)), debug)
 	return result
 
 def test_accuracy(tests, classifier):
@@ -45,24 +46,45 @@ def test_accuracy(tests, classifier):
 	for test in tests:
 		result = classify_string(test[0], classifier)
 		if result != test[1]:
-			print('FAILED TEST: ', test[0], 'was supposed to be', test[1], 'but was', result)
+			print('FAILED TEST: ', repr(test[0]), 'was supposed to be', test[1], 'but was', result)
 		else:
 			successes += 1
 	print(str(successes/len(tests)), 'success rate')
+
+def create_classifier():
+	pos_news, neg_news = tweet_gen.generate_tweet_lists()
+	print('Canonicalize all news.')
+	all_news = canonicalize(pos_news + neg_news)
+	print('Applying features to all data.')
+	training_data = nltk.classify.apply_features(extract_overall_features, all_news)
+	# now, we train the classifier.
+	print('Starting training')
+	classifier = nltk.NaiveBayesClassifier.train(training_data)
+	with open('classifier_cache.pickle', 'wb') as classifier_cache:
+		pickle.dump(classifier, classifier_cache)
+	return classifier
+
+def load_classifier():
+	if os.path.exists('classifier_cache.pickle'):
+		try:
+			with open('classifier_cache.pickle', 'rb') as cache_file:
+				print('load cached.') 
+				classifier = pickle.load(cache_file)
+		except Exception:
+			classifier = create_classifier()
+	else:
+		classifier = create_classifier()
+	classifier.show_most_informative_features(10)
+	return classifier
+def run_tests(classifier):
+	test_samples = [('feel happy this morning', 'positive'), ('larry friend', 'positive'), ('not like that man', 'negative'), \
+				('house not great', 'negative'), ('your song annoying', 'negative')]
+	test_accuracy(test_samples, classifier)
 
 
 # pos_news = [('I love this car', 'positive'), ('This view is amazing', 'positive'), \
 # 			('I feel great this morning', 'positive'), ('He is my best friend', 'positive')]
 # neg_news = [('I do not like this car', 'negative'), ('This view is horrible', 'negative'), \
 # 			('I feel tired this morning.', 'negative'), ('He is an enemy of mine', 'negative')]
-pos_news, neg_news = tweet_gen.generate_tweet_lists()
-test_samples = [('feel happy this morning', 'positive'), ('larry friend', 'positive'), ('not like that man', 'negative'), \
-			('house not great', 'negative'), ('your song annoying', 'negative')]
-all_news = canonicalize(pos_news + neg_news)
-test_samples = canonicalize(test_samples)
-training_data = nltk.classify.apply_features(extract_overall_features, all_news)
-# now, we train the classifier.
-classifier = nltk.NaiveBayesClassifier.train(training_data)
-test_accuracy(test_samples, classifier)
-classifier.show_most_informative_features(10)
+classifier = load_classifier()
 
