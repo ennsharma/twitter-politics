@@ -1,1 +1,3 @@
-# twitter-politics
+# Twitter Politics
+
+## Objective
