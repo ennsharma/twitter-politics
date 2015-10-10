@@ -1,3 +1,2 @@
 # Twitter Politics
-
-## Objective
+As avid followers of the ever-changing political battlefield as the 2016 presidential election draws closer and closer, our team decided it would be a fun and interesting project to create a natural language processing-based internet parser that utilizes a system of ranking and sentiment analysis to generate a time-evolving map of the United States which tracks sentiment towards candidates by geographic region. This is encapsulated in the form of a web application to allow for ease of data visualization and provide accurate, up-to-date information for users who desire a quick analysis and prediction of election results.
