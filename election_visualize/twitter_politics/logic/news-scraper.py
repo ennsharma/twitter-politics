@@ -1,6 +1,6 @@
 import json
 import requests
-import nltk
+# import nltk
 import urllib
 from urllib.request import urlopen
 import html.parser
@@ -35,6 +35,8 @@ def accumulate():
 					titleSoup, paraSoup = soup.findAll("title"), soup.findAll("p")
 					link_article[url] = [titleSoup, paraSoup]
 				except urllib.error.URLError as e:
+					pass
+				except urllib.IncompleteRead as e:
 					pass
 				# cj = cookielib.CookieJar()
 				# opener = build_opener(urllib.HTTPCookieProcessor(cj))
