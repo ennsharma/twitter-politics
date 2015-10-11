@@ -3,11 +3,12 @@ import sentiment
 import news_scraper
 #import twitter_analyze
 nltk.download('punkt')
+tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+classifier = sentiment.load_classifier()
 def articleClassifier(s):
-	tokenizer = nltk.data.load('tokenizers/punkt/english.pickle')
+	print(s)
 	sentences = tokenizer.tokenize(s)
 	positives = 0
-	classifier = sentiment.load_classifier()
 	for sentence in sentences:
 		if sentiment.classify_string(sentence, classifier) == 'positive':
 			positives += 1
@@ -28,19 +29,32 @@ def articleClassifier(s):
 #			positives += 1
 #	return positives / len(instate)
 def candidateClassifier(s, state):
-	candidates = news_scraper.candidateLinks()
+	candidates, articles = news_scraper.accumulate()
 	links = candidates[s][state]
 	postive = 0;
 	for link in links:
-		article = news_scraper.findArticle(link)
+		article = articles[link]
 		reaction = articleClassifier(article)
 		if reaction == 'positive':
 			postive += 1
 
-	return positive/len(links)
+	return positive/len(links), len(links)
+
+def generateDict():
+	text_file = open("portfolio.txt", "r")
+	candidates = text_file.readlines()
+	states_file = open("states.csv", "r")
+	states = states_file.readlines()
+	finalMap = {}
+	for state in states:
+		state = state.strip()
+		stateMap = {}
+		for candidate in candidates:
+			candidate = candidate.strip()
+			stateMap[candidate] = candidateClassifier(candidate, state)
+		finalMap[state] = stateMap
+	return finalMap
 
 
-def mostTalkedAboutClassifer(state):
-	return null
 
 print(candidateClassifier('Joe Biden', 'Texas'))

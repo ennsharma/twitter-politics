@@ -21,6 +21,12 @@ with open(state_file, 'r') as state_file:
 		states.append(s.strip())
 
 def accumulate():
+	with open('portfolio.txt', 'r') as cur_portfolio:
+		for p in cur_portfolio:
+			positions.append(p.strip())
+	with open('states.csv', 'r') as state_file:
+		for s in state_file:
+			states.append(s.strip())
 	for position in positions:
 		dic = {}
 		for state in states:
@@ -52,10 +58,10 @@ def accumulate():
 			# break
 		candidates_stateMap[position] = dic
 		# break
-	with open('candidates_cache.pickle', 'wb') as candidates_cache:
-		pickle.dump(candidates_stateMap, candidates_cache)
-	with open('articles_cache.pickle', 'wb') as articles_cache:
-		pickle.dump(link_article, articles_cache)
+	#with open('candidates_cache.pickle', 'wb') as candidates_cache:
+		#pickle.dump(candidates_stateMap, candidates_cache)
+	#with open('articles_cache.pickle', 'wb') as articles_cache:
+		#pickle.dump(link_article, articles_cache)
 	return candidates_stateMap, link_article	
 
 def candidateLinks():
