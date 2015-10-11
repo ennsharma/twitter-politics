@@ -23,6 +23,15 @@ def parse_stanford_data_1(pos_path, neg_path):
 def parse_stanford_data_2(filename):
 	print("Parsing Stanford_2 Database...")
 	pos_tweets, neg_tweets = [], []
+	f = open(filename, 'r', encoding='utf-8')
+	reader = csv.reader(f, delimeter=',')
+	for line in reader:
+		if line[0] == 4:
+			pos_tweets.append((line[5], 'positive'))
+		elif line[0] == 0:
+			neg_tweets.append((line[5]), 'negative')
+	print("Done.")
+	print("....................")
 	f = open(filename, 'r', encoding='ISO-8859-1')
 	reader = csv.reader(f)
 	for line in reader:
@@ -46,7 +55,7 @@ def parse_umich_data(filename):
 		else:
 			neg_tweets.append((text, 'negative'))
 	print("Done.")
-	print("---------------------------------------------")
+	print("....................")
 	return pos_tweets, neg_tweets
 
 def generate_tweet_lists():
@@ -54,7 +63,11 @@ def generate_tweet_lists():
 	pos_tweets_stanford_2, neg_tweets_stanford_2 = parse_stanford_data_2("./data/stanford_2/training.csv")
 	pos_tweets_umich, neg_tweets_umich = parse_umich_data("./data/umich/training.txt")
 	pos_tweets, neg_tweets = pos_tweets_stanford_1 + pos_tweets_stanford_2 + pos_tweets_umich, neg_tweets_stanford_1 + neg_tweets_stanford_2 + neg_tweets_umich
+<<<<<<< HEAD:tweet_gen.py
+	
+=======
 
+>>>>>>> cbb692685833e8efd75947e890672ccf295f26cb:election_visualize/twitter_politics/logic/tweet_gen.py
 	if len(pos_tweets) > len(neg_tweets):
 		pos_tweets = pos_tweets[:len(neg_tweets)]
 	elif len(pos_tweets) < len(neg_tweets):
